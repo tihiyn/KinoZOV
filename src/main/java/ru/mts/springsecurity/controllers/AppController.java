@@ -9,7 +9,7 @@ import ru.mts.springsecurity.services.AppService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/apps")
+@RequestMapping("")
 public class AppController {
     private final AppService appService;
 
@@ -18,19 +18,19 @@ public class AppController {
         this.appService = appService;
     }
 
-    @GetMapping("/welcome")
+    @GetMapping("/")
     public String welcome() {
-        return "Welcome to unprotected page";
+        return "Welcome to unprotected home page";
     }
 
-    @GetMapping("/all-apps")
+    @GetMapping("/apps")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public List<Application> applicationList() {
         return appService.allApplications();
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/apps/{id}")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public Application applicationById(@PathVariable int id) {
         return appService.applicationById(id);
     }
