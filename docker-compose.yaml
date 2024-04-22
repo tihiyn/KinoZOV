@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./
+    container_name: app
+    ports:
+      - '8080:8080'
+    depends_on:
+      - 'db'
+
+  db:
+    image: 'postgres:latest'
+    container_name: 'db'
+    environment:
+      - 'POSTGRES_DB=db_for_spring_security'
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=123456'
+    volumes:
+      - './src/main/resources/schema.sql:/docker-entrypoint-initdb.d/init.sql'
+      - './pg-data:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432'
