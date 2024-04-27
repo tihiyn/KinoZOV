@@ -30,7 +30,7 @@ public class AppController {
     }
 
     @GetMapping("/apps/{id}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Application applicationById(@PathVariable int id) {
         return appService.applicationById(id);
     }

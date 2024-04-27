@@ -1,0 +1,582 @@
+# TODO: Переписать определения схем с импользованием allOf
+
+openapi: 3.0.3
+info:
+  title: КиноZOV API
+  description: Спецификация API для бэкэнд сервиса КиноZOV.
+  version: 0.0.1
+
+servers:
+  - url: https://kino-zov.ru/api/v1
+    description: Релиз сервер (реальные данные)
+
+paths:
+  # Authentication
+  /auth/register:
+    post:
+      summary: Зарегистрировать нового пользователя
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, email, password, tos_accepted]
+              properties:
+                username:
+                  type: string
+                  example: borocopy
+                email:
+                  type: string
+                  example: borocopy@gmail.com
+                password:
+                  type: string
+                  example: vl@DiMir_ThE_GREat!
+                tos_accepted:
+                  type: boolean
+                  example: true
+      responses:
+        "201":
+          description: Пользователь зарегистрирован.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInfo"
+        "400":
+          description: Предоставленные данные не прошли валидацию.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                error:
+                  $ref: "#/components/examples/BadRequestError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /auth/login:
+    post:
+      summary: Аутентификация через пароль
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email. password]
+              properties:
+                email:
+                  type: string
+                  example: borocopy@gmail.com
+                password:
+                  type: string
+                  example: vl@DiMir_ThE_GREat!
+      responses:
+        '200':
+          description: Пользователь успешно авторизован.
+          headers: 
+            Set-Cookie:
+              schema: 
+                type: string
+                example: JSESSIONID=abcde12345; Path=/; HttpOnly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '401':
+          description: Неправильные данные для авторизации.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                error:
+                  $ref: '#/components/examples/InvalidAuthCredentialsError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  # Movies
+  /movies:
+    get:
+      summary: Получить информацию о фильмах
+      description: >
+        Возвращает информацию о фильмах отсортированных по указанному полю.
+      tags:
+        - movies
+      parameters:
+        - name: from
+          in: query
+          description: |
+            Номер первого по очереди фильма. По умолчанию равно `0`.
+
+            Если запрошен фильм по номеру превосходящий общее количество,
+            то вернётся пустой массив.
+          required: false
+          schema:
+            type: integer
+          example: 40
+        - name: limit
+          in: query
+          description: |
+            Количество фильмов в теле ответа. По умолчанию равно `10`.
+
+            Если проходящих по запросу фильмов меньше, чем запрошено,
+            то вернуть максимум оставшихся.
+          required: false
+          schema:
+            type: integer
+          example: 20
+        - name: sort
+          in: query
+          description: |
+            Параметр сортировки фильмов (по убыванию).
+            По умолчанию равен `release_date`.
+          required: false
+          schema:
+            type: string
+            enum:
+              - release_date
+              - alphabet
+              - avg_rating
+          example: avg_rating
+      responses:
+        '200':
+          description: Запрошенная информация о фильмах.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [total, data]
+                properties:
+                  total:
+                    type: integer
+                    example: 9600
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/MovieInfo"
+                    example:
+                    - id: 313
+                      title: Крёстный отец 2
+                      release_date: '1974-12-20'
+                      avg_rating: 8.58
+                      poster_path: '/jDaC944dvUc1a4M1vp0oSW1XDak.jpg'
+                      genres:
+                        - id: 18
+                          name: драма
+                        - id: 80
+                          name: криминал
+                    - id: 603
+                      title: Матрица
+                      release_date: '1999-03-31'
+                      avg_rating: 8.21
+                      poster_path: '/a5cMdAGykFnzVhsyGhNYE0NEnkR.jpg'
+                      genres:
+                        - id: 28
+                          name: боевик
+                        - id: 878
+                          name: фантастика
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /movies/recommended:
+    get:
+      summary: Получить рекомендации фильмов
+      description: >
+        Возвращает информацию о фильмах рекомендуемых пользователю к просмотру.
+      tags:
+        - movies
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Запрошенная информация о фильмах.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/MovieInfo"
+                    example:
+                      - id: 313
+                        title: Крёстный отец 2
+                        release_date: '1974-12-20'
+                        avg_rating: 8.58
+                        poster_path: '/jDaC944dvUc1a4M1vp0oSW1XDak.jpg'
+                        genres:
+                          - id: 18
+                            name: драма
+                          - id: 80
+                            name: криминал
+                      - id: 603
+                        title: Матрица
+                        release_date: '1999-03-31'
+                        avg_rating: 8.21
+                        poster_path: '/a5cMdAGykFnzVhsyGhNYE0NEnkR.jpg'
+                        genres:
+                          - id: 28
+                            name: боевик
+                          - id: 878
+                            name: фантастика
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /movie/{movie_id}:
+    get:
+      tags:
+        - movies
+      summary: Получить информацию о конкретном фильме
+      description: >
+        Получить детальную информацию о фильме по его ID.
+      parameters:
+        - name: movie_id
+          in: path
+          description: ID фильма.
+          required: true
+          schema:
+            type: integer
+          example: 278
+      responses:
+        '200':
+          description: Запрошенная информация о фильме.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '400':
+          description: Запрошенный фильм не существует.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                error:
+                  $ref: '#/components/examples/BadRequestError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  
+  # Reviews
+  /movies/{movie_id}/reviews:
+    get:
+      tags:
+        - reviews
+      summary: Получить пользовательские рецензии на фильм
+      description: >
+        Получить пользовательские рецензии на фильм.
+        Начало и количество рецензии определяются через параметры `from` и `limit`.
+        Рецензии сортируются по времени начиная от самой новой.
+      parameters:
+        - name: from
+          in: query
+          description: |
+            Номер первой по очереди рецензии. По умолчанию равно `0`.
+
+            Если запрошена рецензию по номеру превосходящая общее количество,
+            то вернётся пустой массив.
+          required: false
+          schema:
+            type: integer
+          example: 40
+        - name: limit
+          in: query
+          description: |
+            Количество рецензий в теле ответа. По умолчанию равно `10`.
+
+            Если проходящих по запросу рецензий меньше, чем запрошено,
+            то вернуть максимум оставшихся.
+          required: false
+          schema:
+            type: integer
+          example: 20
+      responses:
+        '200':
+          description: Рецензии к фильму успешно получены.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [total, data]
+                properties:
+                  total:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    post:
+      tags: [reviews]
+      security:
+        - cookieAuth: []
+      summary: Добавить рецензию пользователя на фильм
+      description: >
+        Добавить рецензию пользователя на фильм.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+                  example: Не понравился фильм, актёры плохо играют.
+                score: 
+                  type: integer
+                  example: 3
+      responses:
+        '201':
+          description: Рецензия успешно добавлена.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id]
+                properties:
+                  id:
+                    type: integer
+                    example: 12
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500': 
+          $ref: '#/components/responses/InternalServerError'
+      
+ 
+
+components:
+  responses:
+    InternalServerError:
+      description: Ошибка на стороне сервера.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              $ref: '#/components/examples/InternalServerError'
+
+    UnauthorizedError:
+      description: Пользователь не авторизован.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              $ref: '#/components/examples/UnauthorizedError'
+    
+    BadRequestError:
+      description: Некорректное тело запроса.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              $ref: '#/components/examples/BadRequestError'
+
+  schemas:
+    ErrorType:
+      type: string
+      enum:
+        - server-00     # Внутренняя ошибка сервера
+        - validation-00 # Тело запроса не прошло валидацию
+        - auth-00       # Неправильные данные для аутентификации
+        - auth-01       # Отсутсвие авторизации
+
+    Error:
+      type: object
+      required: [type, title, status, detail, instance]
+      properties:
+        type: 
+          $ref: '#/components/schemas/ErrorType'
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+
+    Genre:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    MovieInfo:
+      type: object
+      required: [type, title, release_date, poster_path, avg_rating, genres]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        release_date:
+          type: string
+          format: date
+        poster_path:
+          type: string
+          format: uri
+        avg_rating:
+          type: number
+          format: float
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+
+    Movie:
+      type: object
+      required: [type, title, tagline, synopsis, release_date, poster_path, avg_rating, genres]
+      properties:
+        id:
+          type: string
+          example: 278
+        title:
+          type: string
+          example: Побег из Шоушенка
+        tagline:
+          type: string
+          example: «Страх - это кандалы. Надежда - это свобода.»
+        synopsis:
+          type: string
+          example: >
+            Шоушенк — название тюрьмы.
+            И если тебе нет еще 30-ти, а ты получаешь пожизненное,
+            то приготовься к худшему: для тебя выхода из Шоушенка не будет!
+            Актриса Рита Хэйворт — любимица всей Америки.
+            Энди Дифрейну она тоже очень нравилась.
+            Рита никогда не слышала о существовании Энди,
+            однако жизнь Дифрейну, бывшему вице-президенту крупного банка,
+            осужденному за убийство жены и ее любовника,
+            Рита Хэйворт все-таки спасла.
+        release_date:
+          type: string
+          format: date
+          example: '1994-10-14'
+        poster_path:
+          type: string
+          format: uri
+          example: '/yvmKPlTIi0xdcFQIFcQKQJcI63W.jpg'
+        avg_rating:
+          type: number
+          format: float
+          example: 8.7
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+          example:
+            - id: 18
+              name: драма
+            - id: 80
+              name: криминал
+
+    Review:
+      type: object
+      required: [id, movie_id, user, score, content, created_at]
+      properties:
+        id:
+          type: string
+          example: "1337"
+        movie_id:
+          type: string
+          example: "144"
+        user:
+          $ref: '#/components/schemas/UserInfo'
+        score:
+          type: integer
+          example: 9
+        content:
+          type: string
+          example: Очень крутой фильм. Всем рекомендую!
+        created_at:
+          type: string
+          format: date-time
+    
+    UserInfo:
+      type: object
+      required:
+        - id
+        - username
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+      example:
+        id: 322
+        username: borocopy
+
+  examples:
+    UnauthorizedError:
+      summary: "Ошибка авторизации"
+      value:
+        type: "auth-01"
+        title: "Not Authorized"
+        status: 401
+        detail: "Для выполнения запроса необходимо быть авторизованным."
+        instance: GET /v1/collection/resource
+
+    BadRequestError:
+      summary: "Некорректное тело запроса"
+      value:
+        type: "validation-00"
+        title: "Bad request"
+        status: 400
+        detail: Тело запроса некорректно или не прошло валидацию.
+        instance: "GET /v1/collection/resource"
+
+    InvalidAuthCredentialsError:
+      summary: "Неправильные данные для аутентификации"
+      value:
+        type: "auth-00"
+        title: "Not Authorized"
+        status: 401
+        detail: "Несоответствие данных для аутентификации."
+        instance: GET /v1/collection/resource
+
+    InternalServerError:
+      summary: "Ошибка на стороне сервера"
+      value:
+        type: "server-00"
+        title: "Internal server error"
+        status: 500
+        detail: "При выполнении запроса произошла ошибка на стороне сервера."
+        instance: GET /v1/collection/resource
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: JSESSIONID
+
+tags:
+  - name: auth
+    description: Аутентификация
+  - name: movies
+    description: Фильмы
+  - name: reviews
+    description: Рецензии
