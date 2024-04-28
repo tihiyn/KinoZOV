@@ -1,15 +1,13 @@
 package ru.mts.springsecurity.services;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.mts.springsecurity.models.Movie;
 import ru.mts.springsecurity.repositories.MovieRepository;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MovieService {
@@ -19,21 +17,25 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public Page<Movie> setMovies(Integer from, Integer limit, String sort) {
+    public List<Movie> listMovies(Integer from, Integer limit, String sort) {
         if (from == null) {
             from = 0;
         }
         if (from > movieRepository.count()) {
-            return null;
+            return new ArrayList<>();
         }
         if (limit == null) {
             limit = 10;
         }
         if (sort == null) {
-            sort = "release_date";
+            sort = "releaseDate";
         }
 
         return movieRepository.findAll(
-                PageRequest.of(from, limit, Sort.by(Sort.Direction.DESC, sort)));
+                PageRequest.of(from, limit, Sort.by(Sort.Direction.DESC, sort))).toList();
+    }
+
+    public Movie getMovieById(Integer id) {
+        return movieRepository.findById(id).orElse(null);
     }
 }

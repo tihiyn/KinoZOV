@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.mts</groupId>
-    <artifactId>SpringSecurity</artifactId>
+    <artifactId>KinoZOV</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>SpringSecurity</name>
-    <description>SpringSecurity</description>
+    <name>KinoZOV</name>
+    <description>KinoZOV</description>
     <properties>
         <java.version>17</java.version>
     </properties>
