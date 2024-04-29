@@ -2,8 +2,8 @@ package ru.mts.springsecurity.controllers;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mts.springsecurity.models.Application;
-import ru.mts.springsecurity.models.MyUser;
+import ru.mts.springsecurity.entities.Application;
+import ru.mts.springsecurity.entities.MyUser;
 import ru.mts.springsecurity.services.AppService;
 
 import java.util.List;

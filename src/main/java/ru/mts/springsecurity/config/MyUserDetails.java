@@ -3,7 +3,7 @@ package ru.mts.springsecurity.config;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.mts.springsecurity.models.MyUser;
+import ru.mts.springsecurity.entities.MyUser;
 
 import java.util.Arrays;
 import java.util.Collection;

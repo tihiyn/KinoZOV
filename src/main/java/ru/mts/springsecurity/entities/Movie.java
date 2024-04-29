@@ -1,9 +1,6 @@
-package ru.mts.springsecurity.models;
+package ru.mts.springsecurity.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
-import ru.mts.springsecurity.views.Views;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -15,34 +12,24 @@ public class Movie {
     @Id
     @Column(name = "movie_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @JsonView({Views.LongInfo.class, Views.ShortInfo.class})
     private int id;
     @Column(name = "title")
-    @JsonView({Views.LongInfo.class, Views.ShortInfo.class})
     private String title;
     @Column(name = "tagline")
-    @JsonView(Views.LongInfo.class)
     private String tagLine;
     @Column(name = "synopsis")
-    @JsonView(Views.LongInfo.class)
     private String synopsis;
     @Column(name = "release_date")
-    @JsonView({Views.LongInfo.class, Views.ShortInfo.class})
     private LocalDate releaseDate;
     @Column(name = "poster_path")
-    @JsonView({Views.LongInfo.class, Views.ShortInfo.class})
     private String posterPath;
     @Column(name = "avg_rating")
-    @JsonView({Views.LongInfo.class, Views.ShortInfo.class})
     private float avgRating;
     @ManyToMany(mappedBy = "movies")
-    @JsonView({Views.LongInfo.class, Views.ShortInfo.class})
     private Set<Genre> genres = new HashSet<>();
     @OneToMany(mappedBy = "movie")
-    @JsonIgnore
     private Set<MovieCrew> crews = new HashSet<>();
     @OneToMany(mappedBy = "movie")
-    @JsonIgnore
     private Set<Review> reviews;
 
     public Movie() {

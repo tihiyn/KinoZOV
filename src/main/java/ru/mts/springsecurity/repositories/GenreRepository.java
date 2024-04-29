@@ -2,7 +2,7 @@ package ru.mts.springsecurity.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.mts.springsecurity.models.Genre;
+import ru.mts.springsecurity.entities.Genre;
 
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Integer> {

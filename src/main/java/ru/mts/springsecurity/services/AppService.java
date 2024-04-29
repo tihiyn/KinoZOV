@@ -5,8 +5,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.mts.springsecurity.models.Application;
-import ru.mts.springsecurity.models.MyUser;
+import ru.mts.springsecurity.entities.Application;
+import ru.mts.springsecurity.entities.MyUser;
 import ru.mts.springsecurity.repositories.UserRepository;
 
 import java.util.List;

@@ -1,9 +1,6 @@
-package ru.mts.springsecurity.models;
+package ru.mts.springsecurity.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
-import ru.mts.springsecurity.views.Views;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,10 +11,8 @@ public class Genre {
     @Id
     @Column(name = "genre_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @JsonView({Views.LongInfo.class, Views.ShortInfo.class})
     private int id;
     @Column(name = "name")
-    @JsonView({Views.LongInfo.class, Views.ShortInfo.class})
     private String name;
     @ManyToMany
     @JoinTable(
@@ -25,7 +20,6 @@ public class Genre {
             joinColumns = @JoinColumn(name = "genre_id"),
             inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
-    @JsonIgnore
     private Set<Movie> movies = new HashSet<>();
 
     public Genre() {

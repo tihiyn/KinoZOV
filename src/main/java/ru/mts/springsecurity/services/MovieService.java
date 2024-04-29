@@ -3,21 +3,29 @@ package ru.mts.springsecurity.services;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.mts.springsecurity.models.Movie;
+import ru.mts.springsecurity.DTO.MovieDTO;
+import ru.mts.springsecurity.DTO.MovieListDTO;
+import ru.mts.springsecurity.mappers.MovieDTOMapper;
+import ru.mts.springsecurity.mappers.MovieListDTOMapper;
 import ru.mts.springsecurity.repositories.MovieRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
     private final MovieRepository movieRepository;
+    private final MovieDTOMapper movieDTOMapper;
+    private final MovieListDTOMapper movieListDTOMapper;
 
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository, MovieDTOMapper movieDTOMapper, MovieListDTOMapper movieListDTOMapper) {
         this.movieRepository = movieRepository;
+        this.movieDTOMapper = movieDTOMapper;
+        this.movieListDTOMapper = movieListDTOMapper;
     }
 
-    public List<Movie> listMovies(Integer from, Integer limit, String sort) {
+    public List<MovieListDTO> listMovies(Integer from, Integer limit, String sort) {
         if (from == null) {
             from = 0;
         }
@@ -32,10 +40,11 @@ public class MovieService {
         }
 
         return movieRepository.findAll(
-                PageRequest.of(from, limit, Sort.by(Sort.Direction.DESC, sort))).toList();
+                PageRequest.of(from, limit, Sort.by(Sort.Direction.DESC, sort))).stream()
+                .map(movieListDTOMapper).collect(Collectors.toList());
     }
 
-    public Movie getMovieById(Integer id) {
-        return movieRepository.findById(id).orElse(null);
+    public MovieDTO getMovieById(Integer id) {
+        return movieRepository.findById(id).map(movieDTOMapper).orElse(null);
     }
 }

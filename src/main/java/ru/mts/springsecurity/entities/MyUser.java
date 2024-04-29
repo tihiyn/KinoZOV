@@ -1,4 +1,4 @@
-package ru.mts.springsecurity.models;
+package ru.mts.springsecurity.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
