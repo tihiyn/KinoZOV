@@ -1,5 +1,6 @@
 package ru.mts.springsecurity.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,17 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieDTOMapper movieDTOMapper;
     private final MovieListDTOMapper movieListDTOMapper;
 
-    public MovieService(MovieRepository movieRepository, MovieDTOMapper movieDTOMapper, MovieListDTOMapper movieListDTOMapper) {
-        this.movieRepository = movieRepository;
-        this.movieDTOMapper = movieDTOMapper;
-        this.movieListDTOMapper = movieListDTOMapper;
-    }
 
     public List<MovieListDTO> listMovies(Integer from, Integer limit, String sort) {
         if (from == null) {

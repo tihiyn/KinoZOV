@@ -1,10 +1,16 @@
 package ru.mts.springsecurity.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "persons")
 public class Person {
@@ -17,34 +23,7 @@ public class Person {
     @OneToMany(mappedBy = "person")
     private Set<MovieCrew> movieCrews = new HashSet<>();
 
-    public Person() {
-    }
-
     public Person(String name) {
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<MovieCrew> getMovieCrews() {
-        return movieCrews;
-    }
-
-    public void setMovieCrews(Set<MovieCrew> movieCrews) {
-        this.movieCrews = movieCrews;
     }
 }

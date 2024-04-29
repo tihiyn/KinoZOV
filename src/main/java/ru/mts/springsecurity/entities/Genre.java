@@ -1,12 +1,18 @@
 package ru.mts.springsecurity.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "genres")
+@NoArgsConstructor
 public class Genre {
     @Id
     @Column(name = "genre_id")
@@ -22,34 +28,7 @@ public class Genre {
     )
     private Set<Movie> movies = new HashSet<>();
 
-    public Genre() {
-    }
-
     public Genre(String name) {
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<Movie> getMovies() {
-        return movies;
-    }
-
-    public void setMovies(Set<Movie> movies) {
-        this.movies = movies;
     }
 }

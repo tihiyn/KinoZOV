@@ -23,7 +23,7 @@ public class MovieController {
         return movieService.listMovies(from, limit, sort);
     }
 
-    @GetMapping("/movie/{id}")
+    @GetMapping("/movies/{id}")
     public MovieDTO movieInfo(@PathVariable Integer id) {
         return movieService.getMovieById(id);
     }

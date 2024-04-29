@@ -1,9 +1,15 @@
 package ru.mts.springsecurity.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "reviews")
 public class Review {
@@ -29,60 +35,9 @@ public class Review {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public Review() {
-    }
-
     public Review(int rating, String body, LocalDateTime createdAt) {
         this.rating = rating;
         this.body = body;
-        this.createdAt = createdAt;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public MyUser getUser() {
-        return user;
-    }
-
-    public void setUser(MyUser user) {
-        this.user = user;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 }

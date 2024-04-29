@@ -1,7 +1,15 @@
 package ru.mts.springsecurity.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "movie_crews")
 @IdClass(MovieCrewId.class)
@@ -23,31 +31,4 @@ public class MovieCrew {
     @Column(name = "person_job")
     @MapsId(value = "personJob")
     private Job job;
-
-    public MovieCrew() {
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public Job getJob() {
-        return job;
-    }
-
-    public void setJob(Job job) {
-        this.job = job;
-    }
 }
