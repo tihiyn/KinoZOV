@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "reviews")
 public class Review {
     @Id
-    @Column
+    @Column(name = "review_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
 

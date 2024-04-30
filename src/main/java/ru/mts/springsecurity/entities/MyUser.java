@@ -16,14 +16,15 @@ import java.util.Set;
 @Table(name = "users")
 public class MyUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "id_generator", sequenceName = "users_user_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_generator")
     @Column(name = "user_id")
     private int id;
 
     @Column(name = "username")
     private String name;
 
-    @Column(name = "password")
+    @Column(name = "password_hash")
     private String password;
 
     @Column(name = "email")

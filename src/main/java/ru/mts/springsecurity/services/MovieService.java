@@ -6,8 +6,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.mts.springsecurity.DTO.MovieDTO;
 import ru.mts.springsecurity.DTO.MovieListDTO;
+import ru.mts.springsecurity.DTO.ReviewDTO;
 import ru.mts.springsecurity.mappers.MovieDTOMapper;
 import ru.mts.springsecurity.mappers.MovieListDTOMapper;
+import ru.mts.springsecurity.mappers.ReviewDTOMapper;
 import ru.mts.springsecurity.repositories.MovieRepository;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieDTOMapper movieDTOMapper;
     private final MovieListDTOMapper movieListDTOMapper;
-
+    private final ReviewDTOMapper reviewDTOMapper;
 
     public List<MovieListDTO> listMovies(Integer from, Integer limit, String sort) {
         if (from == null) {
@@ -43,5 +45,11 @@ public class MovieService {
 
     public MovieDTO getMovieById(Integer id) {
         return movieRepository.findById(id).map(movieDTOMapper).orElse(null);
+    }
+
+    public List<ReviewDTO> listReviews(Integer id) {
+        return movieRepository.findById(id).orElse(null).getReviews().stream()
+                .map(reviewDTOMapper)
+                .toList();
     }
 }
