@@ -35,7 +35,7 @@ public class Movie {
     private Set<Genre> genres = new HashSet<>();
     @OneToMany(mappedBy = "movie")
     private Set<MovieCrew> crews = new HashSet<>();
-    @OneToMany(mappedBy = "movie")
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews;
 
     public Movie(String title, String tagLine, String synopsis, LocalDate releaseDate, String posterPath, float avgRating) {

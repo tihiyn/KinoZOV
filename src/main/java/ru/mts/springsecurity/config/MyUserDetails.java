@@ -22,6 +22,10 @@ public class MyUserDetails implements UserDetails {
                 .toList();
     }
 
+    public Integer getId() {
+        return user.getId();
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();
