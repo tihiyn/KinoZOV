@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### DB properties ###
-/src/main/resources/application.properties
+/src/main/resources/application-local.properties
