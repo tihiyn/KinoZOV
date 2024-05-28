@@ -1,15 +1,15 @@
 package ru.kinozov.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 @Entity
 @Table(name = "reviews")
 public class Review {
@@ -36,9 +36,8 @@ public class Review {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public Review(int rating, String body, LocalDateTime createdAt) {
+    public Review(int rating, String body) {
         this.rating = rating;
         this.body = body;
-        this.createdAt = createdAt;
     }
 }

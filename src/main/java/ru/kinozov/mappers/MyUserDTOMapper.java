@@ -1,16 +1,16 @@
 package ru.kinozov.mappers;
 
 import org.springframework.stereotype.Service;
-import ru.kinozov.DTO.MyUserDTO;
+import ru.kinozov.DTO.MyUserOutputDTO;
 import ru.kinozov.entities.MyUser;
 
 import java.util.function.Function;
 
 @Service
-public class MyUserDTOMapper implements Function<MyUser, MyUserDTO> {
+public class MyUserDTOMapper implements Function<MyUser, MyUserOutputDTO> {
     @Override
-    public MyUserDTO apply(MyUser myUser) {
-        return new MyUserDTO(
+    public MyUserOutputDTO apply(MyUser myUser) {
+        return new MyUserOutputDTO(
                 myUser.getId(),
                 myUser.getName()
         );

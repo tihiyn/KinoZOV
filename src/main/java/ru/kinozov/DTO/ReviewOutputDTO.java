@@ -1,17 +1,17 @@
 package ru.kinozov.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
 @Setter
-public class ReviewDTO {
+@EqualsAndHashCode
+@ToString
+public class ReviewOutputDTO {
     private int id;
-    private MyUserDTO myUserDTO;
+    private MyUserOutputDTO myUserOutputDTO;
     private int movieId;
     private int rating;
     private String body;

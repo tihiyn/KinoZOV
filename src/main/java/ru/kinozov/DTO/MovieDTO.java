@@ -1,6 +1,7 @@
 package ru.kinozov.DTO;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 public class MovieDTO {
     private int id;
     private String title;

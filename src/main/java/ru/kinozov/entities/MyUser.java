@@ -35,10 +35,10 @@ public class MyUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Review> reviews = new HashSet<>();
 
-    public MyUser(String name, String password, String email, String role) {
+    public MyUser(String name, String password, String email) {
         this.name = name;
         this.password = password;
         this.email = email;
-        this.role = role;
+        this.role = "ROLE_USER";
     }
 }

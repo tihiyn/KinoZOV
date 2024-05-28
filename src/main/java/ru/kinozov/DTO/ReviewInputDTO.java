@@ -7,7 +7,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class MyUserDTO {
-    private int id;
-    private String name;
+public class ReviewInputDTO {
+    private int rating;
+    private String body;
 }
