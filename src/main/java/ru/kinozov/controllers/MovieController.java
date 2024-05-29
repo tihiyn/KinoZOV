@@ -49,4 +49,10 @@ public class MovieController {
 
         return movieService.createReview(id, reviewInputDTO);
     }
+
+    @GetMapping("/movies/recommended")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public List<MovieListDTO> getRecommended() {
+        return null;
+    }
 }

@@ -25,6 +25,7 @@ import ru.kinozov.mappers.ReviewDTOMapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,14 +101,7 @@ public class MovieService {
 
         return movieRepository.findById(id).orElse(null).getReviews().stream()
                 .map(reviewDTOMapper)
-                .sorted((e1, e2) -> {
-                    if (e1.getCreatedAt().isBefore(e2.getCreatedAt())) {
-                        return -1;
-                    } else if (e1.getCreatedAt().isAfter(e2.getCreatedAt())) {
-                        return 1;
-                    }
-                    return 0;
-                })
+                .sorted(Comparator.comparing(ReviewOutputDTO::getCreatedAt))
                 .collect(Collectors.toList()).subList(from, toIndex);
     }
 
