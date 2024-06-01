@@ -1,3 +1,3 @@
 FROM openjdk:17
-ADD /target/SpringSecurity-0.0.1-SNAPSHOT.jar app.jar
+ADD /target/KinoZOV-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
